@@ -17,6 +17,6 @@ repos:
     hooks:
       - id: system
         name: Python checks
-        entry: .venv/bin/poe all
+        entry: poe all
         pass_filenames: false
         language: system
