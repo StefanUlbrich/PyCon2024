@@ -2,6 +2,11 @@
 
 Tutorial session for PyCon/PyData Berlin 2024.
 
+> **To the participants of the tutorial session:**
+>
+> **Please follow the installation steps described below prior to the session
+> to avoid longer delays during at the beginning. Thank you very much!**
+
 Uses a modern tech stack based with a lot of
 (opinionated) choices:
 
