@@ -1,0 +1,6 @@
+[hooks]
+pre-commit = ["cargo test", "poe all"]
+post-commit = "Commit successful"
+
+[logging]
+verbose = true

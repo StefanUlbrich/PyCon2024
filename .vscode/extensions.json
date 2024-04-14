@@ -1,0 +1,13 @@
+{
+    "recommendations": [
+        "usernamehw.errorlens",
+        "DavidAnson.vscode-markdownlint",
+        "rust-lang.rust-analyzer",
+        "tamasfe.even-better-toml",
+        "serayuzgur.crates",
+        "Gruntfuggly.todo-tree",
+        "arcticicestudio.nord-visual-studio-code",
+        "streetsidesoftware.code-spell-checker",
+        "vadimcn.vscode-lldb"
+    ]
+}

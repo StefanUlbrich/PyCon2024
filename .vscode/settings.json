@@ -1,0 +1,34 @@
+{
+    "editor.trimAutoWhitespace": true,
+    "editor.fontFamily": "'Fira Code'",
+    "editor.fontLigatures": true,
+    "editor.inlayHints.enabled": "offUnlessPressed",
+    "editor.formatOnSave": true,
+    "editor.hover.delay": 900,
+    "files.trimTrailingWhitespace": true,
+    "files.trimFinalNewlines": true,
+    "mypy-type-checker.importStrategy": "fromEnvironment",
+    "ruff.importStrategy": "fromEnvironment",
+    "files.exclude": {
+        "**/.git": true,
+        "**/.svn": true,
+        "**/.hg": true,
+        "**/CVS": true,
+        "**/.DS_Store": true,
+        "**/Thumbs.db": true,
+        "**/.ipynb_checkpoints": true,
+        "**/.pytest_cache": true,
+        "**/.ruff_cache": true,
+        "**/__pycache__": true,
+        "**/.mypy_cache": true
+    },
+    "[python]": {
+        "editor.formatOnSave": true,
+        "editor.defaultFormatter": "charliermarsh.ruff"
+    },
+    "rust-analyzer.check.command": "clippy",
+    "rust-analyzer.debug.engine": "vadimcn.vscode-lldb",
+    "evenBetterToml.schema.enabled": false,
+    "autoDocstring.docstringFormat": "numpy",
+    "errorLens.enabled": true,
+}

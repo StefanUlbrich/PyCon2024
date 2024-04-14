@@ -1,0 +1,177 @@
+######################################################
+### Python package description / metadata
+
+[project]
+name = "gaussian_mixtures"
+dependencies = [
+    "numpy>=1.26.2,<2",
+    "SciPy>=1.11.4,<2",
+    "scikit-learn>=1.3.2,<2",
+]
+version = "0.0.1"
+
+classifiers = [
+    "Programming Language :: Python",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Rust",
+    "Topic :: Scientific/Engineering",
+    "Topic :: Scientific/Engineering :: Artificial Intelligence",
+    "Topic :: Scientific/Engineering :: Mathematics",
+    "Intended Audience :: Science/Research",
+    "Private :: Do Not Upload",                                   # Remove when trying to upload
+    "License :: OSI Approved :: MIT License",                     # Example of an OSS license
+]
+readme = "Readme.md"
+requires-python = ">=3.12"
+authors = [{ name = "Stefan Ulbrich", email = "no@mail.com" }]
+
+
+description = "Tutorial session for PyCon/PyData Berlin 2024"
+license = "license.md"
+
+
+######################################################
+### Maturin — manages the Rust extension
+
+# Builds the
+
+[tool.maturin]
+python-source = "bindings/src"
+profile = "release"
+manifest-path = "bindings/Cargo.toml"
+
+[build-system]
+requires = ["maturin>=1.4.0"]
+build-backend = "maturin"
+
+
+######################################################
+### Poetry — only used for virtual environments
+
+[tool.poetry]
+name = "gaussian-mixtures"
+version = "0.0.2"
+description = "Tutorial session for PyCon/PyData Berlin 2024"
+authors = ["Stefan Ulbrich <no@mail.com>"]
+
+
+[tool.poetry.dependencies]
+python = "^3.12"
+
+# Pin package dependencies for reproducible environments
+[tool.poetry.group.main.dependencies]
+numpy = "^1.26.2"
+SciPy = "^1.11.4"
+scikit-learn = "^1.3.2"
+
+
+[project.optional-dependencies]
+# cuda11x = ["cupy-cuda11x>=12.3.0,<13"]
+cuda12x = ["cupy-cuda12x>=12.3.0,<13"]
+dev = [
+    "ruff>=0.2,<0.3",
+    "poethepoet>=0.24,<0.25",
+    "mypy>=1.8,<2.0",
+    "maturin>=1.4,<1.5",
+    "pytest>=7.4,<7.5",
+    "pytest-coverage",
+    "poethepoet<0.26",
+]
+docs = [
+    "pydata-sphinx-theme>=0.15,<0.16",
+    "Sphinx>=7.2.6,<7.3",
+    "myst-parser>=2.0,<2.1",
+]
+lab = [
+    "matplotlib>=3.8",
+    "jupyterlab>=4.0",
+    "jupyter-black>=0.3",
+    "ipympl>=0.9",
+    "ipykernel>=6.27",
+    "seaborn>=0.13",
+]
+
+
+######################################################
+### Tools
+
+[tool.mypy]
+python_version = "3.12"
+warn_unused_configs = true
+warn_unused_ignores = false
+namespace_packages = true
+mypy_path = "python"        #src"
+show_error_codes = true
+strict = true
+
+[[tool.mypy.overrides]]
+module = [
+    'cupy.*',
+    'scipy.*',
+    "sklearn.*",
+    "python_rust_testbed_bindings",
+    "matplotlib.*",
+]
+ignore_missing_imports = true
+
+
+[tool.black]
+line-length = 120
+target_version = ["py312"]
+
+[tool.ruff]
+line-length = 120
+
+
+######################################################
+### Tasks (Poe the Poet)
+
+
+[tool.poe.tasks]
+lint = "ruff check --fix python"
+typing = "mypy -m gaussian_mixtures"
+fmt = "ruff format python/"
+test = "pytest --cov=gaussian_mixtures"
+all = ["fmt", "lint", "typing", "test"]
+
+[tool.poe.tasks.lab]
+shell = """
+jupyter lab
+"""
+help = "Start Jupyter Lab [Poe Task]"
+
+
+[tool.poe.tasks.docs]
+shell = """
+(cd python/docs && sphinx-apidoc ../src/gaussian_mixtures -o api && make html)
+"""
+help = "Build docs [Poe Task]"
+
+
+[tool.poe.tasks.install-kernel]
+cmd = "python -m ipykernel install --user --name gaussian_mixtures --display-name \"gaussian-mixtures (python3)\""
+help = "Install the environment as a kernel [Poe Task]"
+
+[tool.poe.tasks.uninstall-kernel]
+shell = """
+    jupyter kernelspec uninstall gaussian_mixtures -y
+    jupyter kernelspec list
+"""
+help = "Uninstall the kernel associated with this environment [Poe Task]"
+
+[tool.poe.tasks.maturin]
+shell = """maturin develop --release"""
+help = "Build Python extension [Poe Task]"
+
+
+[tool.poe.tasks.install]
+shell = """
+    [ ! -d ".venv" ] && echo "Build venv" && uv venv && uv pip sync requirements.txt
+    uv pip install -e . -v -U
+"""
+help = "(Re)Install this package (rebuilds the rust part). Changes to Python don't require a rebuild."
+
+[tool.poe.tasks.update]
+shell = """
+    uv pip compile pyproject.toml --all-extras -o requirements.txt
+"""

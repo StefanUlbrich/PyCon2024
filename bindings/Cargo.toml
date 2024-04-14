@@ -1,0 +1,19 @@
+[package]
+name = "gaussian_mixture_bindings"
+version = "0.1.0"
+edition = "2021"
+
+[lib]
+name = "gaussian_mixtures"
+# path = "src/lib.rs"
+crate-type = ["cdylib"]
+
+[dependencies]
+
+ndarray = { workspace = true, features = ["rayon", "approx"] }
+pyo3 = { version = "0.21.1", features = ["extension-module"] }
+numpy = "0.21.0"
+gaussian_mixtures = { path = "../rust" }
+
+[dev-dependencies]
+ndarray-npy = { workspace = true }
