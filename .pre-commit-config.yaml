@@ -1,0 +1,22 @@
+repos:
+-   repo: local
+    hooks:
+      - id: system
+        name: cargo test
+        entry: cargo test
+        pass_filenames: false
+        language: system
+-   repo: local
+    hooks:
+      - id: system
+        name: cargo fmt
+        entry: cargo fmt -- --check
+        pass_filenames: false
+        language: system
+-   repo: local
+    hooks:
+      - id: system
+        name: Python checks
+        entry: .venv/bin/poe all
+        pass_filenames: false
+        language: system

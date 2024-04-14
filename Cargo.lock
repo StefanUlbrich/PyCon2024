@@ -509,17 +509,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "gaussian_mixture_bindings"
-version = "0.1.0"
-dependencies = [
- "gaussian_mixtures",
- "ndarray",
- "ndarray-npy",
- "numpy",
- "pyo3",
-]
-
-[[package]]
 name = "gaussian_mixtures"
 version = "0.1.0"
 dependencies = [
@@ -529,6 +518,17 @@ dependencies = [
  "ndarray-npy",
  "plotters",
  "tracing",
+]
+
+[[package]]
+name = "gaussian_mixtures_bindings"
+version = "0.1.0"
+dependencies = [
+ "gaussian_mixtures",
+ "ndarray",
+ "ndarray-npy",
+ "numpy",
+ "pyo3",
 ]
 
 [[package]]

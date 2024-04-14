@@ -36,7 +36,7 @@ license = "license.md"
 # Builds the
 
 [tool.maturin]
-python-source = "bindings/src"
+python-source = "python/src"
 profile = "release"
 manifest-path = "bindings/Cargo.toml"
 
@@ -76,6 +76,8 @@ dev = [
     "pytest>=7.4,<7.5",
     "pytest-coverage",
     "poethepoet<0.26",
+    "pre-commit==3.7.0",
+    "pip>=24.0",              # required by maturin
 ]
 docs = [
     "pydata-sphinx-theme>=0.15,<0.16",
@@ -100,7 +102,7 @@ python_version = "3.12"
 warn_unused_configs = true
 warn_unused_ignores = false
 namespace_packages = true
-mypy_path = "python"        #src"
+mypy_path = "python/src"
 show_error_codes = true
 strict = true
 

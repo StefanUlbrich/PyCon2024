@@ -3,7 +3,7 @@
 Tutorial session for PyCon/PyData Berlin 2024.
 
 Uses a modern tech stack based with a lot of
-opinionated choice:
+(opinionated) choices:
 
 * Python (`^3.12`)
   * [Pyenv](https://github.com/pyenv/pyenv)
@@ -17,12 +17,11 @@ opinionated choice:
     and markdown via [myst-parser](https://myst-parser.readthedocs.io/en/latest/))
     (`--extra docs`)
   * [numpy](https://numpy.org/), [scipy](https://scipy.org/), [sklearn](https://scikit-learn.org/stable/)
-  * Cuda: [cupy](https://cupy.dev/) (`-e cuda12x`, `-e cuda12x` (only cupy))
-  * ~~[pytorch](https://pytorch.org/)~~ (while Python 3.12 is not [supported](https://github.com/openai/triton/issues/2707))
+  * [pre-commit](https://pre-commit.com/) hooks
 
 * Rust
-  * [ndarray]() (equivalent of `numpy`)
-  * [PyO3]() (Python bindings)
+  * [ndarray](https://github.com/rust-ndarray/ndarray) (equivalent of `numpy`)
+  * [PyO3](https://github.com/PyO3/pyo3) (Python bindings)
   * [cargo-show-asm](https://github.com/pacak/cargo-show-asm)
 
 * Development environment (recommendations)
@@ -105,29 +104,54 @@ poe docs
 firefox docs/build/html/index.html # or similar
 ```
 
-### Build Python binding
+#### Installing pre-commit GIT hooks
+
+Activate the virtual environment and run
+
+```sh
+pre-commit install
+```
+
+Then, all modified sources will be checked for formatting and all tests will be on every commit
+unless if called with the `-n` (no-verify) switch. The virtual environment needs to be activated
+for this. If you run into problems with your IDE, please install pre-commit globally for your user.
+
+### Build the Python bindings to the Rust code
 
 After calling the following command, changes in Python are effective immediately from now on
 (restarting the interpreter might be required). Changes in Rust require a rebuild with the same
 command.
 
 ```sh
-uv pip install -e . -v -U
+uv pip install -e . -v -U # for an editable install
 # or
-poe maturin
+poe maturin               # for building a wheel
 ```
 
 ### Rust
 
+First [install Rust](https://forge.rust-lang.org/infra/other-installation-methods.html). This is usually done
+with the `rustup` tool that manages Rust installations and distribution of tools. On a Unix-like OS, run
+
 ```sh
 curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
 rustup update
+```
 
+You can check your installation by building the project. The command used for this is
+`cargo` a build system (comparable to `poetry` or `rye` in the Python world):
+
+```sh
 cargo build
 ```
 
-<!-- ```sh
+You should also install the following add-ons to the `cargo` build system:
+
+```sh
 cargo install cargo-criterion
 cargo install cargo-show-asm
+```
+
+<!-- ```sh
 cargo asm -v --simplify --release --lib -p PROJECT LIBRARY::MODULE::FUNCTION 0 --rust
-``` -->
+```-->

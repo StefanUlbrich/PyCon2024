@@ -1,3 +1,7 @@
-"""A very basic, yet agruably elegant implementation of cture models"""
+"""A very basic, educative implementation of Gaussian mixture models"""
 
-from gaussian_mixture_bindings import gmm as _gmm  # type: ignore  # noqa: F401
+from . import gaussian_mixtures as bindings  # type: ignore  # noqa: F401
+
+
+def hello() -> None:
+    ...

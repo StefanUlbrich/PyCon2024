@@ -2,19 +2,15 @@
 #![allow(unused)]
 
 use numpy::{IntoPyArray, PyArray1, PyArray2, PyArray3, PyReadonlyArray2};
-use pyo3::{pymodule, types::PyModule, PyResult, Python};
+use pyo3::prelude::*;
 
-use ::gaussian_mixtures::maximize;
+use ::gaussian_mixtures::hello;
 
 #[pymodule]
-fn gaussian_mixtures(_py: Python<'_>, m: &PyModule) -> PyResult<()> {
+fn gaussian_mixtures(m: &Bound<'_, PyModule>) -> PyResult<()> {
     #[pyfn(m)]
-    #[pyo3(name = "maximize")]
-    fn maximize_py<'py>(
-        py: Python<'py>,
-        data: PyReadonlyArray2<f64>,
-        responsibilities: PyReadonlyArray2<f64>,
-    ) -> (&'py PyArray2<f64>, &'py PyArray3<f64>, &'py PyArray1<f64>) {
+    #[pyo3(name = "hello")]
+    fn hello_py(py: Python<'_>) {
         todo!()
     }
     Ok(())

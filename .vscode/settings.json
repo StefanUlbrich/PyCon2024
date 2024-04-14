@@ -1,7 +1,7 @@
 {
     "editor.trimAutoWhitespace": true,
-    "editor.fontFamily": "'Fira Code'",
-    "editor.fontLigatures": true,
+    // "editor.fontFamily": "'Fira Code'",
+    // "editor.fontLigatures": true,
     "editor.inlayHints.enabled": "offUnlessPressed",
     "editor.formatOnSave": true,
     "editor.hover.delay": 900,
