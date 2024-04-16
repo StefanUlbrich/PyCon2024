@@ -3,7 +3,7 @@
 
 use itertools::izip;
 use ndarray::{
-    // parallel::prelude::{IntoParallelIterator, ParallelIterator},
+    parallel::prelude::{IntoParallelIterator, ParallelIterator},
     prelude::*,
 };
 
