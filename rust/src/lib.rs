@@ -20,11 +20,13 @@ pub fn maximize(data: ArrayView2<f64>, responsibilities: ArrayView2<f64>) -> (Ar
     // Initialize memory
     let mut covs = Array3::<f64>::zeros((k, d, d));
 
-    for i in 0..k {
-        let x = adjusted.slice(s![.., i, ..]);
-        let y = &x * &responsibilities.slice(s![.., i, NewAxis]);
-
-        covs.slice_mut(s![i, .., ..]).assign(&x.t().dot(&y));
+    for (x, mut c, r) in izip!(
+        adjusted.axis_iter(Axis(1)),
+        covs.axis_iter_mut(Axis(0)),
+        responsibilities.axis_iter(Axis(1))
+    ) {
+        let y = &x * &r.slice(s![.., NewAxis]);
+        c += &x.t().dot(&y);
     }
 
     covs = &covs / &sum_responsibilities.slice(s![.., NewAxis, NewAxis]);
