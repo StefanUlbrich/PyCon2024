@@ -5,7 +5,33 @@ use ndarray::prelude::*;
 
 /// Maximization step in the EM algorithm
 pub fn maximize(data: ArrayView2<f64>, responsibilities: ArrayView2<f64>) -> (Array2<f64>, Array3<f64>, Array1<f64>) {
-    todo!()
+    let k = *responsibilities.shape().get(1).unwrap();
+    let d = *data.shape().get(1).unwrap();
+
+    // Similar to the Python code
+    let sum_responsibilities = responsibilities.sum_axis(Axis(0));
+
+    let means = (&responsibilities.slice(s![.., .., NewAxis]) * &data.slice(s![.., NewAxis, ..])).sum_axis(Axis(0))
+        / sum_responsibilities.slice(s![.., NewAxis]);
+
+    // n x k x d
+    let adjusted = &data.slice(s![.., NewAxis, ..]) - &means.slice(s![NewAxis, .., ..]);
+
+    // Initialize memory
+    let mut covs = Array3::<f64>::zeros((k, d, d));
+
+    for i in 0..k {
+        let x = adjusted.slice(s![.., i, ..]);
+        let y = &x * &responsibilities.slice(s![.., i, NewAxis]);
+
+        covs.slice_mut(s![i, .., ..]).assign(&x.t().dot(&y));
+    }
+
+    covs = &covs / &sum_responsibilities.slice(s![.., NewAxis, NewAxis]);
+
+    let weights = &sum_responsibilities / sum_responsibilities.sum();
+
+    (means, covs, weights)
 }
 
 #[cfg(test)]
