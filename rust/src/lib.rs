@@ -1,6 +1,7 @@
 //! Gaussian Mixtures in Rust
 #![allow(unused)]
 
+use itertools::izip;
 use ndarray::prelude::*;
 
 /// Maximization step in the EM algorithm
@@ -20,14 +21,15 @@ pub fn maximize(data: ArrayView2<f64>, responsibilities: ArrayView2<f64>) -> (Ar
     // Initialize memory
     let mut covs = Array3::<f64>::zeros((k, d, d));
 
-    for (x, mut c, r) in izip!(
+    izip!(
         adjusted.axis_iter(Axis(1)),
         covs.axis_iter_mut(Axis(0)),
         responsibilities.axis_iter(Axis(1))
-    ) {
-        let y = &x * &r.slice(s![.., NewAxis]);
-        c += &x.t().dot(&y);
-    }
+    )
+    .for_each(|(x, mut cov, resp)| {
+        let y = &x * &resp.slice(s![.., NewAxis]);
+        cov += &x.t().dot(&y);
+    });
 
     covs = &covs / &sum_responsibilities.slice(s![.., NewAxis, NewAxis]);
 
