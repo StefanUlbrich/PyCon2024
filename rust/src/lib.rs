@@ -2,14 +2,16 @@
 #![allow(unused)]
 
 use itertools::izip;
-use ndarray::prelude::*;
+use ndarray::{
+    // parallel::prelude::{IntoParallelIterator, ParallelIterator},
+    prelude::*,
+};
 
 /// Maximization step in the EM algorithm
 pub fn maximize(data: ArrayView2<f64>, responsibilities: ArrayView2<f64>) -> (Array2<f64>, Array3<f64>, Array1<f64>) {
     let k = *responsibilities.shape().get(1).unwrap();
     let d = *data.shape().get(1).unwrap();
 
-    // Similar to the Python code
     let sum_responsibilities = responsibilities.sum_axis(Axis(0));
 
     let means = (&responsibilities.slice(s![.., .., NewAxis]) * &data.slice(s![.., NewAxis, ..])).sum_axis(Axis(0))
@@ -18,18 +20,18 @@ pub fn maximize(data: ArrayView2<f64>, responsibilities: ArrayView2<f64>) -> (Ar
     // n x k x d
     let adjusted = &data.slice(s![.., NewAxis, ..]) - &means.slice(s![NewAxis, .., ..]);
 
-    // Initialize memory
     let mut covs = Array3::<f64>::zeros((k, d, d));
 
-    izip!(
+    (
         adjusted.axis_iter(Axis(1)),
         covs.axis_iter_mut(Axis(0)),
-        responsibilities.axis_iter(Axis(1))
+        responsibilities.axis_iter(Axis(1)),
     )
-    .for_each(|(x, mut cov, resp)| {
-        let y = &x * &resp.slice(s![.., NewAxis]);
-        cov += &x.t().dot(&y);
-    });
+        .into_par_iter()
+        .for_each(|(x, mut cov, resp)| {
+            let y = &x * &resp.slice(s![.., NewAxis]);
+            cov += &x.t().dot(&y);
+        });
 
     covs = &covs / &sum_responsibilities.slice(s![.., NewAxis, NewAxis]);
 
