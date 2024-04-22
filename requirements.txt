@@ -8,6 +8,8 @@ anyio==4.3.0
     # via
     #   httpx
     #   jupyter-server
+appnope==0.1.4
+    # via ipykernel
 argon2-cffi==23.1.0
     # via jupyter-server
 argon2-cffi-bindings==21.2.0
@@ -56,7 +58,6 @@ contourpy==1.2.1
     # via matplotlib
 coverage==7.4.4
     # via pytest-cov
-cupy-cuda12x==12.3.0
 cycler==0.12.1
     # via matplotlib
 debugpy==1.8.1
@@ -76,8 +77,6 @@ executing==2.0.1
     # via stack-data
 fastjsonschema==2.19.1
     # via nbformat
-fastrlock==0.8.2
-    # via cupy-cuda12x
 filelock==3.13.4
     # via virtualenv
 fonttools==4.51.0
@@ -223,7 +222,6 @@ notebook-shim==0.2.4
 numpy==1.26.4
     # via
     #   contourpy
-    #   cupy-cuda12x
     #   ipympl
     #   matplotlib
     #   pandas
