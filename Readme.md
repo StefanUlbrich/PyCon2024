@@ -1,11 +1,19 @@
 # Gaussian Mixtures
 
-Tutorial session for PyCon/PyData Berlin 2024.
+Repository for the tutorial session "Performant, scientific computation in Python and Rust" at PyCon/PyData Berlin 2024.
 
 > **To the participants of the tutorial session:**
 >
-> **Please follow the installation steps described below prior to the session
-> to avoid longer delays during at the beginning. Thank you very much!**
+> All stages of the tutorial can be reproduced by checking out different branches of this repository
+> and the slides are written in HTML and will be hosted on GitHub pages shortly before the session so
+> that you can see them in our browser.
+>
+> **Note: If you want to reproduce the tutorial on your device, please follow the installation steps
+> described below prior to the session to avoid longer delays during at the beginning.
+> Thank you very much!**
+>
+> I use [`uv`](https://github.com/astral-sh/uv) for dependency handling but you can use
+> `pip-tools` or plain pip / virtual environments instead.
 
 Uses a modern tech stack based with a lot of
 (opinionated) choices:
@@ -55,11 +63,13 @@ pyenv install -l # choose a recent version
 pyenv install 3.12.0
 ```
 
-Alternatively, you can use the system's version. On Debian-based Linux distributions, run
+Alternatively, you can use the system's version of course. On macOS using `brew` is recommended, while on Debian-based Linux distributions, run
 
 ```sh
 sudo apt install python3.12
 ```
+
+I have little experience with Windows systems, but you should probably use WSL2 there.
 
 ### Virtual environment
 
@@ -76,9 +86,18 @@ Create environment and install the package
 ```sh
 pyenv shell 3.12 # optional to select version when using pyenv
 uv venv
+# The next line needs only be called if dependencies are altered
 uv pip compile pyproject.toml --all-extras -o requirements.txt
 uv pip sync requirements.txt
 . ./venv/bin/activate # Optional to activate the environment
+```
+
+Alternatively, you should be able to achieve the same with plain `pip`
+
+```sh
+python3.12 -m venv .venv
+. ./venv/bin/activate # Optional to activate the environment
+pip install -r requirements.txt
 ```
 
 You should select the newly created virtual environment in your development environment.
