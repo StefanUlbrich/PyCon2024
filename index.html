@@ -1,46 +1,348 @@
 <!doctype html>
 <html lang="en">
 
-	<head>
-		<meta charset="utf-8">
+<head>
+    <meta charset="utf-8">
 
-		<title>The Rust and the Python – A tutorial for numerical python extensions</title>
+    <title>The Rust and the Python – A tutorial for numerical python extensions</title>
 
-		<link rel="stylesheet" href="./dist/reveal.css">
-		<link rel="stylesheet" href="./dist/theme/sky.css" id="theme">
+    <link rel="stylesheet" href="./dist/reveal.css">
+    <link rel="stylesheet" href="./dist/theme/sky.css" id="theme">
 
-        <link rel="stylesheet" href="./plugin/highlight/monokai.css">
-        <link href="https://fonts.cdnfonts.com/css/bloody" rel="stylesheet">
-        <style>
-            .container{
-                display: flex;
-            }
-            .col{
-                flex: 1;
-            }
-        </style>
+    <link rel="stylesheet" href="./plugin/highlight/monokai.css">
+    <link href="https://fonts.cdnfonts.com/css/bloody" rel="stylesheet">
+    <style>
+        .container {
+            display: flex;
+        }
 
-	</head>
+        .col {
+            flex: 1;
+        }
+    </style>
 
-	<body>
+</head>
 
-        <div class="reveal">
+<body>
 
-            <div class="slides">
+    <div class="reveal">
 
-                <!-- Slides are separated by three dashes (the default) -->
-                <section  data-background-image="img/cult_lg.png">
-                    <h1  style="color:red; font-family: 'Bloody', sans-serif;" class="fragment fade-down" data-fragment-index="1,2" >
-                        The Rust and the Python
-                    </h1>
-                    <h2 style="color:lightgray;" class="fragment fade-up" data-fragment-index="2" >
-                        Efficient numerical Python extensions </br> … written in Rust
-                    </h2>
+        <div class="slides">
+            <section>
+                <h2> </h2>
+                <ul>
+                    <li> </li>
+                </ul>
+            </section>
+            <!-- Start with neutral title slide -->
+
+
+            <section>
+
+
+                <section>
+                    <h2> Who am I? </h2>
+                    <!-- <img class="fragment fade-out" data-fragment-index="1" src="img/em4.png" width="75%"> -->
+
+                    <ul>
+                        <li> Data Scientist at BlueYonder </li>
+                        <li> Research interests: Roboticist & Cognitive Cognition, Machine Learning (self-organization)
+                        </li>
+                        <li> Pythonista (> 15 years) and Rustacean (~2.5 years) </li>
+                    </ul>
                 </section>
 
+                <section>
+                    <h2> What to expect? </h2>
+                    <div>
+                        <ul>
+                            <li>
+                                A time-lapse of algorithm development from the formula <br /> to the optimized
+                                package in Python and Rust
+
+                            </li>
+                            <li class="fragment fade-in" data-fragment-index="1"> Takeaways
+                                <ul>
+                                    <li> Feeling for creating scientific / numeric packages </li>
+                                    <li> Weaknesses and strengths of Python and Rust </li>
+                                    <li> How well they actually play together </li>
+
+                                </ul>
+                            </li>
+                            <li class="fragment fade-in" data-fragment-index="2">
+                                All sources (including these slides) on <a
+                                    href="https://github.com/StefanUlbrich/PyCon2024">Github</a>
+                            </li>
+                            <li class="fragment fade-in" data-fragment-index="2">
+                                Open source license (MIT). Feel free to use as a template!
+                            </li>
+                        </ul>
+                    </div>
+
+                    <!-- <par>
+
+                        Takeaways <br />
+                    </par> -->
+
+                    <ul>
+                    </ul>
+                </section>
+                <section>
+                    <h2> What to <b>not</b> expect? </h2>
+                    <ul>
+                        <li class="fragment fade-in" data-fragment-index="1"> A <a
+                                href="https://google.github.io/comprehensive-rust/">comprehensive Rust</a> course </li>
+                        <li class="fragment fade-in" data-fragment-index="2"> Deep learning frameworks </li>
+                        <li class="fragment fade-in" data-fragment-index="3"> Complex models such as LLM </li>
+                        <li class="fragment fade-in" data-fragment-index="4"> No bugs </li>
+                        <li class="fragment fade-in" data-fragment-index="4"> No typos </li>
+                    </ul>
+                </section>
+
+            </section>
 
 
-                <!--
+
+            <section>
+                <h2> Structure </h2>
+                <ol>
+                    <li> Gaussian Mixtures and Expectation Maximization </li>
+                    <li> Python tooling, implementation and packaging </li>
+                    <li> Rust: Brief overview, Python extension and benchmarking</li>
+                </ol>
+            </section>
+
+
+            <section>
+                <h2> Part 1 — Gaussian Mixtures and Expectation Maximization </h2>
+            </section>
+
+
+
+            <section>
+                <div class="container" style="margin: 5%">
+
+                    <div class="col">
+                        <h2> Why <em>this</em> model? </h2>
+                        <ul>
+                            <li> Easy to understand </li>
+                            <li> Educational yet useful / versatile </li>
+                            <li> Easy / fast to implement (±30 LoC) </li>
+                            <li> Easy / fast to train and evaluate </li>
+                            <li> Bonus: Probabilistic </li>
+                        </ul>
+                    </div>
+                    <div class="col">
+                        <div class="fragment fade-in" data-fragment-index="2">
+                            <h2> … and why not?</h2>
+                            <ul>
+                                <li> Easy to express with arrays (<tt>numpy</tt>, <tt>torch</tt>) </li>
+                                <li> Difference to Rust not drastic </li>
+                                <li> Better suited: Caching (e.g., dynamic programming), complex control flows, …
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section>
+                <div>
+                    <!-- <img class="fragment fade-out" data-fragment-index="1" src="img/em4.png" width="75%"> -->
+                    <img src="img/anim2.gif" width="95%">
+                </div>
+                In action (for clustering).
+            </section>
+
+
+            <section>
+                <h2> Formal definition </h2>
+
+                <div class="container" style="margin: 5%">
+
+                    <div class="col">
+                        <div class="r-stack">
+                            <img class="fragment fade-out" data-fragment-index="1" src="img/gmm.png" width="75%">
+                            <img class="fragment fade-in" data-fragment-index="1" src="img/plate-notation.svg"
+                                width="75%">
+                            <!-- <img class="fragment fade-in" data-fragment-index="4" src="img/em4.png" width="75%"> -->
+                        </div>
+                    </div>
+                    <div class="col">
+
+                        <div class="r-stack">
+                            <div class="fragment fade-out" data-fragment-index="1" style="scale: 80%;">
+                                $$ \begin{aligned}
+                                p(\bm x | M ) &= \sum_{m\in M} \pi_m \cdot p(\bm x | m) \\
+                                &= \sum_{m\in M} \pi_m \cdot \mathcal N(x; \bm \mu_m, \Sigma_m) \\
+                                &= \pi_m \cdot \frac{1}{ \sqrt{(2\pi)^d \det({\Sigma_m})} } \\ & \qquad
+                                \exp \left(-\frac{1}{2}({\mathbf x}-{\bm\mu_m})^{\top}{{\Sigma_m}}^{-1}({\bm
+                                x}-{\bm\mu_m}) \right)
+                                \end{aligned} $$
+                            </div>
+                            <div class="fragment fade-in" data-fragment-index="1">
+
+                                $$ X = \left\{ \begin{pmatrix} \bm x_i \\ z_i \end{pmatrix}\right\}_i,
+                                \quad \bm x_i \in \mathbb R^d, z_i \in M $$
+                                <ul>
+                                    <li class="fragment fade-in" data-fragment-index="1"> Data $\bm x_i$ is observable;
+                                        $z_i$ non-observable / latent
+                                    <li class="fragment fade-in" data-fragment-index="2"> 1 Multinomial/Categorical
+                                        distribution </li>
+                                    <li class="fragment fade-in" data-fragment-index="2"> $k$ Normal distributions
+                                    </li>
+                                    <li class="fragment fade-in" data-fragment-index="3">
+                                        Each draw $i$ first determines the Normal distribution $z_i$
+                                        and then the sample $\bm x_i$
+                                    </li>
+                                    <li class="fragment fade-in" data-fragment-index="4">
+                                        Example: Weight / height distribution in an animal population
+                                    </li>
+                                    <li class="fragment fade-in" data-fragment-index="4"> <a
+                                            href="https://lemonfold.io/posts/2022/aiml_essentials/part2/aiml-essentials-part2/">see
+                                            my blog post (no formulas)</a> </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+
+
+            <section>
+                <h2> Expectation Maximization (EM) </h2>
+
+                <p> Gaussian mixture models can be trained with EM </p>
+
+                <div class="fragment fade-in" data-fragment-index="1">
+                    $$ X = \left\{ \bm x_i\right\}_i, \quad \bm x \in \mathbb R^d $$
+                </div>
+
+                <ul>
+                    <li class="fragment fade-in" data-fragment-index="1"> Algorithm for unsupervised learning /
+                        Clustering </li>
+                    <li class="fragment fade-in"> Missing data: We don't know which Gaussian $z_i$ produced $\bm
+                        x_i$</li>
+                    <li class="fragment fade-in"> The unobservable variable $z_1$ is called the <i>latent state</i>
+                    </li>
+                    <li class="fragment fade-in"> Alternating pattern: E-Step and M-Step </li>
+                    <li class="fragment fade-in"> Guaranteed to converge but prone to local minima </li>
+                    <div class="fragment fade-in">
+
+                        <li> Many models can be trained with EM: </li>
+                        <ul>
+                            <li> $k$-Means </li>
+                            <li> Self-organizing neural networks </li>
+                            <li> Other mixture models </li>
+                            <li> Hidden Markov Models </li>
+                            <li> Kalmann filters </li>
+                        </ul>
+                    </div>
+                </ul>
+            </section>
+            <section>
+                <section>
+                    <h2><b>E</b>(xpectation)-step (Intuition)</h2>
+
+                    <div class="container" style="margin: 5%">
+                        <div class="col">
+                            <img src="img/expectation.png" width="75%">
+                        </div>
+                        <div class="col">
+                            <ul>
+                                <li> "Guessing the hidden states"</li>
+                                <li> For each sample and each component,
+                                    the probability that the sample has been generated by the component </li>
+                                <li> Unlike $k$-means, points can belong to multiple clusters "soft assignment"</li>
+                                <li> Number of data points $\times$ number of clusters probabilities ("responsibility
+                                    matrix")</li>
+                            </ul>
+                        </div>
+                    </div>
+                </section>
+                <section>
+                    <h2><b>E</b>(xpectation)-step (Formula)</h2>
+
+                    <div class="col">
+                        $$
+                        \begin{aligned}
+                        \forall m \in M, \bm x \in X&: \\
+                        \bar \gamma_{\bm x,m} &= \pi_m \cdot p(\bm x | m) \\
+                        &= \pi_m \cdot \mathcal N( \bm x; \bm\mu_m, \Sigma_m) \\
+                        &= \pi_m \cdot \frac{1}{ \sqrt{(2\pi)^d \det({\Sigma_m})} }
+                        \exp \left(-\frac{1}{2}({\mathbf x}-{\bm\mu_m})^{\top}{{\Sigma_m}}^{-1}({\bm x}-{\bm\mu_m})
+                        \right)\\
+                        \gamma_{\bm x,m} &= \frac{\bar \gamma_{\bm x, m}}{ \sum_{m \in M} \bar \gamma_{\bm x, m} }
+                        \end{aligned}
+                        $$
+                    </div>
+                </section>
+            </section>
+            <section>
+                <section>
+                    <h2><b>M</b>(aximization)-step (Intuition)</h2>
+                    <div class="container" style="margin: 5%">
+                        <div class="col">
+                            <img src="img/maximization.png" width="75%">
+                        </div>
+                        <div class="col">
+                            <ul>
+                                <li> Maximize the likelihood of the
+                                    distribution </li>
+                                <li> Compute the new parameters of each
+                                    Gaussian </li>
+                                <li> Sample mean and covariance weighted by the responsibilities (from the E-Step)</li>
+                                <li> We will implement this function in Rust </li>
+                            </ul>
+                        </div>
+                </section>
+                <section>
+                    <h2><b>M</b>(aximization)-step (Formula)</h2>
+
+                    <div style="margin: 100px">
+                        $$ \begin{aligned}
+                        \bm\mu_m &\leftarrow \frac{\sum_{\bm x \in X} \gamma_{\bm x,m} \cdot \bm x }{\sum_{\bm x \in X}
+                        \gamma_{\bm x,m}}
+                        \\
+                        \Sigma_m &\leftarrow \frac{\sum_{\bm x \in X} \gamma_{\bm x,m} \cdot (\bm x - \bm\mu_m)^t\cdot
+                        (\bm x - \bm \mu_m) }{\sum_{\bm x \in X} \gamma_{\bm x,m}}\\
+                        \pi_m &\leftarrow \frac{\sum_{\bm x \in X}}{\sum_{\bm x \in X} \gamma_{\bm x,m}}
+                        \end{aligned}
+                        , \quad
+                        $$
+                    </div>
+                </section>
+            </section>
+
+            <section>
+                <h2> GMM/EM: Applications </h2>
+                <div class="r-stack">
+                    <div class="fragment fade-out" data-fragment-index="1">
+                        <img src="img/cluster3d.png">
+                        <p> High-dimensional clustering (Warning: $\mathcal O(n^3)$!)</p>
+                    </div>
+                    <div class="fragment fade-in" data-fragment-index="1">
+                        <img src="img/regression.png">
+                        <p>
+
+                        <ul>
+                            <li> Regression </li>
+                            <li> Image recognition </li>
+                            <li> … </li>
+                        </ul>
+                        </p>
+                    </div>
+                </div>
+            </section>
+            </section>
+
+
+
+
+
+
+            <!--
                     * About rust:
                         * show how to define a function that accepts arrays
                         * Distinguish from the concept of ownership and reference
@@ -50,242 +352,18 @@
                     * show classes and interfaces
                  -->
 
+            <section>
+                <h2> Part 2 — Python tooling, implementation and packaging </h2>
+            </section>
+
+
+
+            <section>
                 <section>
-                    <h2> Agenda </h2>
-                    <ul>
-                        <li> Goals </li>
-                        <ol>
-                            <li class="fragment fade-in" data-fragment-index="0"> Quick intro to Rust </li>
-                            <li class="fragment fade-in" data-fragment-index="1"> Machine Learning (ML) theory </li>
-                            <li class="fragment fade-in" data-fragment-index="2"> A modern, clean and efficient Python package </li>
-                            <li class="fragment fade-in" data-fragment-index="3"> Optimization with a Rust extension </li>
-                        </ol>
-                        <li class="fragment fade-in" data-fragment-index="4">
-                            All sources (including these slides) on <a href="https://github.com/StefanUlbrich/numeric-rust-python-tutorial/tree/main">Github</a> </li>
-                        <li class="fragment fade-in" data-fragment-index="4">
-                            Open source license (MIT). Feel free to use as a template!
-                        </li>
-                    </ul>
-                </section>
-
-                <section>
-                    <section>
-                        <h2> Rust: A quick introduction </h2>
-                        <ul>
-                            <li>A few facts </li>
-                            <li> Common headline on hackernews: " * .. but written in Rust" </li>
-                            <li> Recommendation <a href=""><i>Rust-inspired Python programming</i></a></li>
-                            <li> but … it takes time to learn. C++ background helpful </li>
-                            <li> A very commited cult .. community </li>
-                        </ul>
-                    </section>
-                    <section>
-                        <h2> Rust </h2>
-                        <ul>
-                            <li> What's different to Python </li>
-                            <li> Not deep introduction! </li>
-                            <li> Garbage collection. vs borrow checking </li>
-                            <li> Strong, dynamic typing vs. strong, static type </li>
-                            <li> The Tooling, crates vs wheels </li>
-                        </ul>
-                    </section>
-                    <section>
-                        <h2> Structs and Interfaces </h2>
-                        <ul>
-                            <li> ... </li>
-                        </ul>
-                    </section>
-                    <section>
-                        <h2> Borrowing & Lifetimes </h2>
-                        <ul>
-                            <li> ... </li>
-                        </ul>
-                    </section>
-                    <section>
-                        <h2> Enums </h2>
-                        <ul>
-                            <li> Option and Error types are build on Enums </li>
-                        </ul>
-                    </section>
-                    <section>
-                        <h2> Pattern matching </h2>
-                        <ul>
-                            <li> ... </li>
-                        </ul>
-                    </section>
-                    <section>
-                        <h2> Functional programming </h2>
-                        <ul>
-                            <li> ... </li>
-                        </ul>
-                    </section>
-                </section>
-                <section>
-                    <section>
-                        <h2> Which<br>algorithm / ML<br>to choose?</h2>
-                        <ul>
-                            <li class="fragment fade-in" data-fragment-index="0"> Easy to understand </li>
-                            <li class="fragment fade-in" data-fragment-index="1"> Educational yet useful / versatile </li>
-                            <li class="fragment fade-in" data-fragment-index="2"> Easy / fast to implement (±50 LoC) </li>
-                            <li class="fragment fade-in" data-fragment-index="3"> Easy / fast to train and evaluate </li>
-                            <li class="fragment fade-in" data-fragment-index="4"> Bonus: probabilistic </li>
-                        </ul>
-                    </section>
-                    <section>
-                        <h2> Gaussian Mixture Models </h2>
-
-                        <div class="container" style="margin: 5%">
-
-                            <div class="col">
-                                <div class="r-stack">
-                                    <img class="fragment fade-out" data-fragment-index="1" src="img/em4.png" width="75%">
-                                    <img class="fragment fade-in" data-fragment-index="1" src="img/plate-notation.svg" width="75%">
-                                    <!-- <img class="fragment fade-in" data-fragment-index="4" src="img/em4.png" width="75%"> -->
-                                </div>
-                            </div>
-                            <div class="col">
-
-                                <div class="r-stack">
-                                    <div class="fragment fade-out" data-fragment-index="1" style="scale: 80%;">
-                                        $$ \begin{aligned}
-                                        p(\bm x | M ) &= \sum_{m\in M} \pi_m \cdot p(\bm x | m) \\
-                                        &= \sum_{m\in M} \pi_m \cdot \mathcal N(x; \bm \mu_m, \Sigma_m) \\
-                                        &= \pi_m \cdot \frac{1}{ \sqrt{(2\pi)^d \det({\Sigma_m})} } \\ & \qquad
-                            \exp \left(-\frac{1}{2}({\mathbf x}-{\bm\mu_m})^{\top}{{\Sigma_m}}^{-1}({\bm x}-{\bm\mu_m}) \right)
-                                        \end{aligned} $$
-                                    </div>
-                                    <div class="fragment fade-in" data-fragment-index="1">
-
-                                        $$ X = \left\{  \begin{pmatrix} \bm x_i \\ z_i \end{pmatrix}\right\}_i,
-                                        \quad \bm x \in \mathbb R^d, z \in M  $$
-                                        <ul>
-                                            <li class="fragment fade-in" data-fragment-index="1"> 1 Multinomial/Categorical distribution </li>
-                                            <li class="fragment fade-in" data-fragment-index="2"> $k$ Normal distributions  </li>
-                                            <li class="fragment fade-in" data-fragment-index="3">
-                                                Each draw $i$ first determines the Normal distribution $z_i$
-                                                and then the sample $\bm x_i$
-                                            </li>
-                                            <li class="fragment fade-in" data-fragment-index="4">
-                                                Example: Weight / height distribution in an animal population
-                                            </li>
-                                            <li class="fragment fade-in">  <a href="https://lemonfold.io/posts/2022/aiml_essentials/part2/aiml-essentials-part2/">see my blog post (no formulas)</a> </li>
-                                        </ul>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-
-
-
-
-                    </section>
-                    <section>
-                        <h2> Expectation Maximization (EM) </h2>
-
-                        <p> Gaussian mixture models can be trained with EM </p>
-
-                        <div class="fragment fade-in" data-fragment-index="1">
-                            $$ X = \left\{  \bm x_i\right\}_i, \quad \bm x \in \mathbb R^d $$
-                        </div>
-
-                        <ul>
-                            <li class="fragment fade-in" data-fragment-index="1"> Algorithm for unsupervised learning / Clustering </li>
-                            <li class="fragment fade-in"> Missing data: We don't know which Gaussian $z_i$ produced $\bm x_i$</li>
-                            <li class="fragment fade-in"> The unobservable variable $z_1$ is called the <i>latent state</i>  </li>
-                            <li class="fragment fade-in"> Alternating pattern: E-Step and M-Step  </li>
-                            <li class="fragment fade-in"> Guaranteed to converge but prone to local minima </li>
-                            <div class = "fragment fade-in">
-
-                                <li> Many models can be trained with EM:  </li>
-                                <ul>
-                                    <li> $k$-Means </li>
-                                    <li> Self-organizing neural networks </li>
-                                    <li> Other mixture models </li>
-                                    <li> Hidden Markov Models </li>
-                                    <li> Kalmann filters </li>
-                                </ul>
-                            </div>
-                        </ul>
-                    </section>
-                    <section>
-                        <h2>E(xpectation)-step</h2>
-
-                        <div style="margin: 5%">
-                            $$
-                            \begin{aligned}
-                            \forall m \in M, \bm x \in X&: \\
-                            \bar \gamma_{\bm x,m} &= \pi_m \cdot p(\bm x | m) \\
-                            &= \pi_m \cdot \mathcal N( \bm x; \bm\mu_m, \Sigma_m) \\
-                            &=  \pi_m \cdot \frac{1}{ \sqrt{(2\pi)^d \det({\Sigma_m})} }
-                            \exp \left(-\frac{1}{2}({\mathbf x}-{\bm\mu_m})^{\top}{{\Sigma_m}}^{-1}({\bm x}-{\bm\mu_m}) \right)\\
-                            \gamma_{\bm x,m} &= \frac{\bar \gamma_{\bm x, m}}{ \sum_{m \in M} \bar \gamma_{\bm x, m} }
-                            \end{aligned}
-                            $$
-                        </div>
-
-                        <ul>
-                            <li class="fragment" data-fragment-index="2"> "Guessing the hidden states"</li>
-                            <li class="fragment" data-fragment-index="3"> For each sample and each component,
-                                 the probability <br> that the sample has been generated by the component </li>
-                        </ul>
-                    </section>
-                    <section>
-                        <h2>M(aximization)-step</h2>
-
-                        <div style="margin: 100px">
-                            $$ \begin{aligned}
-                            \bm\mu_m &\leftarrow \frac{\sum_{\bm x \in X} \gamma_{\bm x,m} \cdot \bm x }{\sum_{\bm x \in X} \gamma_{\bm x,m}}
-                            \\
-                            \Sigma_m &\leftarrow  \frac{\sum_{\bm x \in X} \gamma_{\bm x,m} \cdot (\bm x - \bm\mu_m)^t\cdot (\bm x - \bm \mu_m) }{\sum_{\bm x \in X} \gamma_{\bm x,m}}\\
-                            \pi_m &\leftarrow \frac{\sum_{\bm x \in X}}{\sum_{\bm x \in X} \gamma_{\bm x,m}}
-                            \end{aligned}
-                            , \quad
-                            $$
-                        </div>
-
-                        <ul>
-                            <li class="fragment" data-fragment-index="2"> Maximize the likelihood of the distribution </li>
-                            <li class="fragment" data-fragment-index="3"> Compute the new parameters of each Gaussian </li>
-                        </ul>
-                    </section>
-                    <section>
-                        <h2> EM in action </h2>
-                        <div class="r-stack">
-                            <img class="fragment fade-out" data-fragment-index="1" src="img/em1.png" width="50%">
-                            <img class="fragment fade-in-then-out" data-fragment-index="1" src="img/em2.png" width="50%">
-                            <img class="fragment fade-in-then-out" data-fragment-index="2" src="img/em3.png" width="50%">
-                            <img class="fragment fade-in" data-fragment-index="3" src="img/em4.png" width="50%">
-                        </div>
-
-                    </section>
-                    <section>
-                        <h2> Applications </h2>
-                        <div class="r-stack">
-                            <div class="fragment fade-out" data-fragment-index="1">
-                                <img  src="img/cluster3d.png" >
-                                <p> High-dimensional clustering (Warning: $\mathcal O(n^3)$!)</p>
-                            </div>
-                            <div class="fragment fade-in" data-fragment-index="1">
-                                <img  src="img/regression.png">
-                                <p>
-
-                                    <ul>
-                                        <li> Regression </li>
-                                        <li> Image recognition </li>
-                                        <li> … </li>
-                                    </ul>
-                                </p>
-                            </div>
-                        </div>
-                    </section>
-                </section>
-                <section>
-                    <section>
-                        <h2>
-                            GMM/EM in Python
-                        </h2>
-                        <pre style="width: 60%;"><code data-trim data-noescape>
+                    <h2>
+                        GMM/EM in Python
+                    </h2>
+                    <pre style="width: 60%;"><code data-trim data-noescape>
                             $ # Python packaging and dependency management
                             $ curl -sSL https://install.python-poetry.org | python3 -
                             $ # Get the code
@@ -295,41 +373,46 @@
                             tutorial$ poetry env use python3.11 # Optional
                             tutorial$ poetry install
                         </code></pre>
-                        <ul>
-                            <li>System setup (Python install, IDE setup, etc.) out of scope</li>
-                            <li>All steps of the tutorial as git tags
-                            (e.g., <a href="https://github.com/StefanUlbrich/numeric-rust-python-tutorial/tree/python-skeleton">python-skeleton</a> and
-                            <a href="https://github.com/StefanUlbrich/numeric-rust-python-tutorial/tree/python-version">python-version</a>)</li>
-                            <li>Tested on MacOS and Linux only (WSL should work)</li>
-                            <li>I use <a href="https://code.visualstudio.com/">VSCode</a> and <a href="https://jupyter.org/">Jupyter lab</a> for development and prototyping </li>
-                        </ul>
-                    </section>
+                    <ul>
+                        <li>System setup (Python install, IDE setup, etc.) out of scope</li>
+                        <li>All steps of the tutorial as git tags
+                            (e.g., <a
+                                href="https://github.com/StefanUlbrich/numeric-rust-python-tutorial/tree/python-skeleton">python-skeleton</a>
+                            and
+                            <a
+                                href="https://github.com/StefanUlbrich/numeric-rust-python-tutorial/tree/python-version">python-version</a>)
+                        </li>
+                        <li>Tested on MacOS and Linux only (WSL should work)</li>
+                        <li>I use <a href="https://code.visualstudio.com/">VSCode</a> and <a
+                                href="https://jupyter.org/">Jupyter lab</a> for development and prototyping </li>
+                    </ul>
+                </section>
 
-                    <section style="height: 65%;">
-                        <h2> Design decisions </h2>
+                <section style="height: 65%;">
+                    <h2> Design decisions </h2>
 
 
-                        <div class="container" style="height: 100%; margin-top: 5%;" >
-                            <div class="col">
+                    <div class="container" style="height: 100%; margin-top: 5%;">
+                        <div class="col">
+                            <ul>
+                                <li> ADT / Data class represents the GMM </li>
                                 <ul>
-                                    <li> ADT / Data class represents the GMM </li>
-                                    <ul>
-                                        <li>Numpy arrays for parameters</li>
-                                        <li>Additional dimensions instead of lists</li>
-                                    </ul>
-                                    <li> No OOP</li>
-                                    <ul>
-                                        <li> No OOP (easier to replace functions)</li>
-                                        <li> EM implemented as three functions </li>
-                                        <li> E-Step </li>
-                                        <li> M-Step variants: 2 Python + 1 Rust </li>
-                                        <li> Simple initialization: <br> (random $\gamma_{\bm x,m}$ + M-Step) </li>
-                                    </ul>
-                                    <li> Benchmark (timeit) and data generation </li>
+                                    <li>Numpy arrays for parameters</li>
+                                    <li>Additional dimensions instead of lists</li>
                                 </ul>
-                            </div>
-                            <div class="col" >
-                                <pre style="height: 80%; width: 70%;">
+                                <li> No OOP</li>
+                                <ul>
+                                    <li> No OOP (easier to replace functions)</li>
+                                    <li> EM implemented as three functions </li>
+                                    <li> E-Step </li>
+                                    <li> M-Step variants: 2 Python + 1 Rust </li>
+                                    <li> Simple initialization: <br> (random $\gamma_{\bm x,m}$ + M-Step) </li>
+                                </ul>
+                                <li> Benchmark (timeit) and data generation </li>
+                            </ul>
+                        </div>
+                        <div class="col">
+                            <pre style="height: 80%; width: 70%;">
                                     <code data-trim data-line-numbers>
                                         @dataclass
                                         class GMM:
@@ -351,131 +434,197 @@
                                             ...
                                     </code>
                                 </pre>
-                            </div>
-
                         </div>
-                    </section>
 
-                    <section>
-                        <h2> The E-Step </h2>
+                    </div>
+                </section>
+
+                <section>
+                    <h2> The E-Step </h2>
 
 
 
-                        $$
-                        \begin{aligned}
-                        \forall m \in M, \bm x \in X&: \\
-                        \bar \gamma_{\bm x,m} &= \pi_m \cdot p(\bm x | m) \\
-                        &= \pi_m \cdot \mathcal N( \bm x; \bm\mu_m, \Sigma_m) \\
-                        &=  \pi_m \cdot \frac{1}{ \sqrt{(2\pi)^d \det({\Sigma_m})} }
-                        \exp \left(-\frac{1}{2}({\mathbf x}-{\bm\mu_m})^{\top}{{\Sigma_m}}^{-1}({\bm x}-{\bm\mu_m}) \right)\\
-                        \gamma_{\bm x,m} &= \frac{\bar \gamma_{\bm x, m}}{ \sum_{m \in M} \bar \gamma_{\bm x, m} }
+                    $$
+                    \begin{aligned}
+                    \forall m \in M, \bm x \in X&: \\
+                    \bar \gamma_{\bm x,m} &= \pi_m \cdot p(\bm x | m) \\
+                    &= \pi_m \cdot \mathcal N( \bm x; \bm\mu_m, \Sigma_m) \\
+                    &= \pi_m \cdot \frac{1}{ \sqrt{(2\pi)^d \det({\Sigma_m})} }
+                    \exp \left(-\frac{1}{2}({\mathbf x}-{\bm\mu_m})^{\top}{{\Sigma_m}}^{-1}({\bm x}-{\bm\mu_m})
+                    \right)\\
+                    \gamma_{\bm x,m} &= \frac{\bar \gamma_{\bm x, m}}{ \sum_{m \in M} \bar \gamma_{\bm x, m} }
+                    \end{aligned}
+                    $$
+                    <p>
+                        Intimidating, but …
+                    <ul>
+                        <li>Only $n\times k$ Gaussians </li>
+                        <li>And normalization (probabilities) </li>
+                        <li>Try it out </li>
+                    </ul>
+
+                    </p>
+
+                </section>
+                <section>
+                    <h2> The M-Step — Naïve </h2>
+                    <div style="margin: 100px">
+                        $$ \begin{aligned}
+                        \bm\mu_m &\leftarrow \frac{\sum_{\bm x \in X} \gamma_{\bm x,m} \cdot \bm x }{\sum_{\bm x \in X}
+                        \gamma_{\bm x,m}} \\
+                        \Sigma_m &\leftarrow \frac{\sum_{\bm x \in X} \gamma_{\bm x,m} \cdot (\bm x - \bm\mu_m)^t\cdot
+                        (\bm x - \bm \mu_m) }{\sum_{\bm x \in X} \gamma_{\bm x,m}} \\
+                        \pi_m &\leftarrow \frac{\sum_{\bm x \in X}}{\sum_{\bm x \in X} \gamma_{\bm x,m}}
                         \end{aligned}
                         $$
-                        <p>
-                        Intimidating, but …
-                            <ul>
-                                <li>Only $n\times k$ Gaussians </li>
-                                <li>And normalization (probabilities) </li>
-                                <li>Try it out </li>
-                            </ul>
+                    </div>
 
-                        </p>
-
-                    </section>
-                    <section>
-                        <h2> The M-Step — Naïve </h2>
-                        <div style="margin: 100px">
-                            $$ \begin{aligned}
-                            \bm\mu_m &\leftarrow \frac{\sum_{\bm x \in X} \gamma_{\bm x,m} \cdot \bm x }{\sum_{\bm x \in X} \gamma_{\bm x,m}}                             \\
-                            \Sigma_m &\leftarrow  \frac{\sum_{\bm x \in X} \gamma_{\bm x,m} \cdot (\bm x - \bm\mu_m)^t\cdot (\bm x - \bm \mu_m) }{\sum_{\bm x \in X} \gamma_{\bm x,m}}  \\
-                            \pi_m &\leftarrow \frac{\sum_{\bm x \in X}}{\sum_{\bm x \in X} \gamma_{\bm x,m}}
-                            \end{aligned}
+                    <ul>
+                        <li> We will focus on the M-Step </li>
+                        <li> Loops in python are slow. How can we avoid as many loops as possible </li>
+                        <li> First naïve implementation (only one loop) </li>
+                    </ul>
+                </section>
+                <section>
+                    <h2> The M-Step — The physicist's way </h2>
+                    <div class="r-stack">
+                        <div class="fragment fade-out" data-fragment-index="1">
+                            $$ \Sigma_m \leftarrow \frac{\sum_{\bm x \in X} \gamma_{\bm x,m} \cdot (\bm x -
+                            \bm\mu_m)^t\cdot (\bm x - \bm \mu_m) }
+                            {\sum_{\bm x \in X} \gamma_{\bm x,m}}, \qquad \forall m \in M
                             $$
                         </div>
-
-                        <ul>
-                            <li> We will focus on the M-Step </li>
-                            <li> Loops in python are slow. How can we avoid as many loops as possible </li>
-                            <li> First naïve implementation (only one loop) </li>
-                        </ul>
-                    </section>
-                    <section>
-                        <h2> The M-Step — The physicist's way  </h2>
-                        <div class="r-stack">
-                            <div class="fragment fade-out" data-fragment-index="1">
-                                $$ \Sigma_m \leftarrow  \frac{\sum_{\bm x \in X} \gamma_{\bm x,m} \cdot (\bm x - \bm\mu_m)^t\cdot (\bm x - \bm \mu_m) }
-                                {\sum_{\bm x \in X} \gamma_{\bm x,m}}, \qquad \forall m \in M
-                                $$
-                            </div>
-                            <div class="fragment fade-in" data-fragment-index="1">
-                                $$ \Sigma_m \leftarrow  \frac{\sum_{\bm x \in X} \gamma_{\bm x,m} \cdot \bar{\bm x}_m^t\cdot \bar{\bm x}_m }
-                                {\sum_{\bm x \in X} \gamma_{\bm x,m}},  \qquad \bar{\bm x}_m = \bm x - \bm \mu_m, \quad \forall m \in M
-                                $$
-                            </div>
+                        <div class="fragment fade-in" data-fragment-index="1">
+                            $$ \Sigma_m \leftarrow \frac{\sum_{\bm x \in X} \gamma_{\bm x,m} \cdot \bar{\bm x}_m^t\cdot
+                            \bar{\bm x}_m }
+                            {\sum_{\bm x \in X} \gamma_{\bm x,m}}, \qquad \bar{\bm x}_m = \bm x - \bm \mu_m, \quad
+                            \forall m \in M
+                            $$
                         </div>
+                    </div>
 
-                        <div class="r-stack" style="margin: 5%;">
-                            <div class="fragment fade-in-then-out" data-fragment-index="2">
-                                $$ \bar X_{k,n,d} \cdot \Gamma_{k,n} \cdot \bar X_{k,n,d} = \bm \Sigma_{k,d,d}  $$
-                            </div>
-                            <div class="fragment fade-in-then-out" data-fragment-index="3">
-                                <pre style="width: 100%;">
+                    <div class="r-stack" style="margin: 5%;">
+                        <div class="fragment fade-in-then-out" data-fragment-index="2">
+                            $$ \bar X_{k,n,d} \cdot \Gamma_{k,n} \cdot \bar X_{k,n,d} = \bm \Sigma_{k,d,d} $$
+                        </div>
+                        <div class="fragment fade-in-then-out" data-fragment-index="3">
+                            <pre style="width: 100%;">
                                     <code data-trim>
                                         knd, kn, knd -> kdd
                                     </code>
                                 </pre>
-                            </div>
-                            <div class="fragment fade-in-then-out" data-fragment-index="4">
-                                <pre style="width: 100%;">
+                        </div>
+                        <div class="fragment fade-in-then-out" data-fragment-index="4">
+                            <pre style="width: 100%;">
                                     <code data-trim>
                                         einstein_sum_notation('knd, kn, knd -> kdd', data, responsibilities, data)
                                     </code>
                                 </pre>
-                            </div>
+                        </div>
 
-                            <div class="fragment fade-in-then-out" data-fragment-index="5">
-                                <pre style="width: 100%;">
+                        <div class="fragment fade-in-then-out" data-fragment-index="5">
+                            <pre style="width: 100%;">
                                     <code data-trim>
                                         einsum('knd, kn, knd -> kdd', data, responsibilities, data)
                                     </code>
                                 </pre>
-                            </div>
-                            <div class="fragment fade-in" data-fragment-index="6">
-                                <pre style="width: 100%;">
+                        </div>
+                        <div class="fragment fade-in" data-fragment-index="6">
+                            <pre style="width: 100%;">
                                     <code data-trim>
                                         np.einsum('knd, kn, knd -> kdd', data, responsibilities, data)
                                     </code>
                                 </pre>
-                            </div>
                         </div>
-                        <ul>
-                            <li class="fragment fade-in" data-fragment-index="2"> Think in tensors to avoid loops </li>
-                            <li class="fragment fade-in" data-fragment-index="2"> This is called <a href="https://en.wikipedia.org/wiki/Einstein_notation"> Einstein notation </a> </li>
-                            <li class="fragment fade-in" data-fragment-index="6"> Included in Numpy! </li>
-                            <li class="fragment fade-in" data-fragment-index="7"> Must be faster, right? Let's find out! </li>
-                        </ul>
-                    </section>
-                    <section>
-                        <h2> Benchmark  </h2>
-                        <div>
+                    </div>
+                    <ul>
+                        <li class="fragment fade-in" data-fragment-index="2"> Think in tensors to avoid loops </li>
+                        <li class="fragment fade-in" data-fragment-index="2"> This is called <a
+                                href="https://en.wikipedia.org/wiki/Einstein_notation"> Einstein notation </a> </li>
+                        <li class="fragment fade-in" data-fragment-index="6"> Included in Numpy! </li>
+                        <li class="fragment fade-in" data-fragment-index="7"> Must be faster, right? Let's find out!
+                        </li>
+                    </ul>
+                </section>
+                <section>
+                    <h2> Benchmark </h2>
+                    <div>
 
-                            <pre style="width: 50%;">
+                        <pre style="width: 50%;">
                                 <code data-trim>
                                     # Benchmark results
                                 </code>
                             </pre>
-                        </div>
+                    </div>
 
-                        <p>Surprisingly, the loops are faster!</p>
-                    </section>
+                    <p>Surprisingly, the loops are faster!</p>
+                </section>
 
+            </section>
+
+            <section>
+                <h2> Part 3 — Rust: Brief overview, Python extension and benchmarking </h2>
+            </section>
+
+            <section>
+                <section>
+                    <h2> Rust: A quick introduction </h2>
+                    <ul>
+                        <li>A few facts </li>
+                        <li> Common headline on hacker news: " * .. but written in Rust" </li>
+                        <li> Recommendation <a href=""><i>Rust-inspired Python programming</i></a></li>
+                        <li> but … it takes time to learn. C++ background helpful </li>
+                        <li> A very committed cult .. Community </li>
+                    </ul>
                 </section>
                 <section>
-                    <section>
-                        <h2>
-                            The M-Step in Rust
-                        </h2>
-                        <pre style="width: 60%;"><code data-trim data-noescape>
+                    <h2> Rust </h2>
+                    <ul>
+                        <li> What's different to Python </li>
+                        <li> Not deep introduction! </li>
+                        <li> Garbage collection vs. borrow checking </li>
+                        <li> Strong, dynamic typing vs. strong, static type </li>
+                        <li> The Tooling, crates vs wheels </li>
+                    </ul>
+                </section>
+                <section>
+                    <h2> Structs and Interfaces </h2>
+                    <ul>
+                        <li> ... </li>
+                    </ul>
+                </section>
+                <section>
+                    <h2> Borrowing & Lifetimes </h2>
+                    <ul>
+                        <li> ... </li>
+                    </ul>
+                </section>
+                <section>
+                    <h2> Enums </h2>
+                    <ul>
+                        <li> Option and Error types are build on Enums </li>
+                    </ul>
+                </section>
+                <section>
+                    <h2> Pattern matching </h2>
+                    <ul>
+                        <li> ... </li>
+                    </ul>
+                </section>
+                <section>
+                    <h2> Functional programming </h2>
+                    <ul>
+                        <li> ... </li>
+                    </ul>
+                </section>
+            </section>
+
+            <section>
+                <section>
+                    <h2>
+                        The M-Step in Rust
+                    </h2>
+                    <pre style="width: 60%;"><code data-trim data-noescape>
                             $ # Installation
                             $ curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
                             $ rustup update # Optional: Update the tool chain
@@ -485,92 +634,103 @@
                             tutorial$ cargo run --example read_data
                             tutorial$ # cargo bench # run benchmarks later
                         </code></pre>
-                        <ul>
-                            <li> <a href="https://www.rust-lang.org/tools/install"> Install instructions </a></li>
-                            <li> Sorry there is a bug in the <code>read_data</code> example</li>
-                            <li>Tested on MacOS and Linux only (WSL should work)</li>
-                        </ul>
-                    </section>
-                    <section>
-                        <h2> Rust </h2>
-                        <ul>
-                            <li> What's different to Python </li>
-                            <li> Not deep introduction! </li>
-                            <li> Garbage collection. vs borrow checking </li>
-                            <li> Strong, dynamic typing vs. strong, static type </li>
-                            <li> The Tooling, crates vs wheels </li>
-                        </ul>
-                    </section>
-                    <section>
-                        <h2>
-                            Writing a first programm
-                        </h2>
-                        <ul>
-                            <li> Project, .. </li>
-                            <li> Hello world </li>
-                            <li> Reading files </li>
-                        </ul>
-                    </section>
-                    <section>
-                        <h2> M-Step </h2>
-                        <ul>
-                            <li> Benchmarking </li>
-                            <li> The C-way </li>
-                            <li> Iterators </li>
-                            <li> Parallelization </li>
-                        </ul>
-                    </section>
-                </section>
-                <section>
-                    <section>
-                        <h2> Exposing as an module </h2>
-                        <ul>
-
-                            <li> Maturin with poetry </li>
-                            <li> Shortcomings (loosing scripts, testing—we would need two crates) </li>
-                            <li> Benchmarking </li>
-                        </ul>
-                    </section>
-                </section>
-                <section>
-                    <h2> Takeaways </h2>
                     <ul>
-                        <li> It is not difficult to write clean python packages! </li>
-                        <li> It is not difficult to create mixed Rust/Python packages! </li>
-                        <li> Loops are faster than einsum! </li>
-                        <li> Rust is faster because of parallelization! </li>
-                        <li> Simple things are not difficult in Rust! </li>
-                        <li> The rest is (opnionated, not shown)! </li>
+                        <li> <a href="https://www.rust-lang.org/tools/install"> Install instructions </a></li>
+                        <li> Sorry there is a bug in the <code>read_data</code> example</li>
+                        <li>Tested on MacOS and Linux only (WSL should work)</li>
                     </ul>
                 </section>
                 <section>
-                    <h1> Happy coding, Rustlings! </h1>
+                    <h2> Rust </h2>
+                    <ul>
+                        <li> What's different to Python </li>
+                        <li> Not deep introduction! </li>
+                        <li> Garbage collection. vs borrow checking </li>
+                        <li> Strong, dynamic typing vs. strong, static type </li>
+                        <li> The Tooling, crates vs wheels </li>
+                    </ul>
                 </section>
+                <section>
+                    <h2>
+                        Writing a first programm
+                    </h2>
+                    <ul>
+                        <li> Project, .. </li>
+                        <li> Hello world </li>
+                        <li> Reading files </li>
+                    </ul>
+                </section>
+                <section>
+                    <h2> M-Step </h2>
+                    <ul>
+                        <li> Benchmarking </li>
+                        <li> The C-way </li>
+                        <li> Iterators </li>
+                        <li> Parallelization </li>
+                    </ul>
+                </section>
+            </section>
+            <section>
+                <section>
+                    <h2> Exposing as an module </h2>
+                    <ul>
 
-            </div> <!-- slides -->
-		</div> <!-- reveal-->
+                        <li> Maturin with poetry </li>
+                        <li> Shortcomings (loosing scripts, testing—we would need two crates) </li>
+                        <li> Benchmarking </li>
+                    </ul>
+                </section>
+            </section>
+            <section>
+                <h2> Takeaways </h2>
+                <ul>
+                    <li> It is not difficult to write clean python packages! </li>
+                    <li> It is not difficult to create mixed Rust/Python packages! </li>
+                    <li> Loops are faster than einsum! </li>
+                    <li> Rust is faster because of parallelization! </li>
+                    <li> Simple things are not difficult in Rust! </li>
+                    <li> The rest is (opnionated, not shown)! </li>
+                </ul>
+            </section>
 
-		<script src="./dist/reveal.js"></script>
-        <script src="./plugin/markdown/markdown.js"></script>
-        <script src="./plugin/highlight/highlight.js"></script>
-        <script src="./plugin/notes/notes.js"></script>
-        <script src="./plugin/math/math.js"></script>
 
-		<script>
 
-			Reveal.initialize({
-				controls: true,
-				progress: true,
-				history: true,
-				center: true,
 
-                width: 1920,
-                height: 1080,
+            <!-- Slides are separated by three dashes (the default) -->
+            <section data-background-image="img/cult_lg.png">
+                <h1 style="color:red; font-family: 'Bloody', sans-serif;" class="fragment fade-down"
+                    data-fragment-index="1,2">
+                    The Rust and the Python
+                </h1>
+                <h2 style="color:lightgray;" class="fragment fade-up" data-fragment-index="2">
+                    Efficient numerical Python extensions </br> … written in Rust
+                </h2>
+            </section>
+        </div> <!-- slides -->
+    </div> <!-- reveal-->
 
-				plugins: [ RevealMarkdown, RevealHighlight, RevealNotes, RevealMath.KaTeX ]
-			});
+    <script src="./dist/reveal.js"></script>
+    <script src="./plugin/markdown/markdown.js"></script>
+    <script src="./plugin/highlight/highlight.js"></script>
+    <script src="./plugin/notes/notes.js"></script>
+    <script src="./plugin/math/math.js"></script>
 
-		</script>
+    <script>
 
-	</body>
+        Reveal.initialize({
+            controls: true,
+            progress: true,
+            history: true,
+            center: true,
+
+            width: 1920,
+            height: 1080,
+
+            plugins: [RevealMarkdown, RevealHighlight, RevealNotes, RevealMath.KaTeX]
+        });
+
+    </script>
+
+</body>
+
 </html>
