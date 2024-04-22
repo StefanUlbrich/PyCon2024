@@ -15,6 +15,11 @@ Repository for the tutorial session "Performant, scientific computation in Pytho
 > I use [`uv`](https://github.com/astral-sh/uv) for dependency handling but you can use
 > `pip-tools` or plain pip / virtual environments instead.
 
+> **To the participants of the tutorial session:**
+>
+> **Please follow the installation steps described below prior to the session
+> to avoid longer delays during at the beginning. Thank you very much!**
+
 Uses a modern tech stack based with a lot of
 (opinionated) choices:
 
