@@ -475,48 +475,39 @@
                     <h2> The E-Step </h2>
 
 
-
-                    $$
-                    \begin{aligned}
-                    \forall m \in M, \bm x \in X&: \\
-                    \bar \gamma_{\bm x,m} &= \pi_m \cdot p(\bm x | m) \\
-                    &= \pi_m \cdot \mathcal N( \bm x; \bm\mu_m, \Sigma_m) \\
-                    \gamma_{\bm x,m} &= \frac{\bar \gamma_{\bm x, m}}{ \sum_{m \in M} \bar \gamma_{\bm x, m} }\\
-                    \mathcal N( \bm x; \bm\mu_m, \Sigma_m) &:= \pi_m \cdot \frac{1}{ \sqrt{(2\pi)^d \det({\Sigma_m})} }
-                    \exp \left(-\frac{1}{2}({\mathbf x}-{\bm\mu_m})^{\top}{{\Sigma_m}}^{-1}({\bm x}-{\bm\mu_m})
-                    \right)\\
-                    \end{aligned}
-                    $$
-                    <p>
-                        Intimidating, but …
-                    <ul>
-                        <li>Only $n\times k$ Gaussians </li>
-                        <li>And normalization (Bayes theorem) </li>
-                        <li> How hard can it be …? (live)</li>
-                    </ul>
-
-                    </p>
-
-                </section>
-                <section>
-                    <h2> The M-Step — Naïve </h2>
-                    <div style="margin: 100px">
-                        $$ \begin{aligned}
-                        \bm\mu_m &\leftarrow \frac{\sum_{\bm x \in X} \gamma_{\bm x,m} \cdot \bm x }{\sum_{\bm x \in X}
-                        \gamma_{\bm x,m}} \\
-                        \Sigma_m &\leftarrow \frac{\sum_{\bm x \in X} \gamma_{\bm x,m} \cdot (\bm x - \bm\mu_m)^t\cdot
-                        (\bm x - \bm \mu_m) }{\sum_{\bm x \in X} \gamma_{\bm x,m}} \\
-                        \pi_m &\leftarrow \frac{\sum_{\bm x \in X}}{\sum_{\bm x \in X} \gamma_{\bm x,m}}
+                    <div>
+                        $$
+                        \begin{aligned}
+                        \forall m \in M, \bm x \in X&: \\
+                        \bar \gamma_{\bm x,m} &= \pi_m \cdot p(\bm x | m) \\
+                        &= \pi_m \cdot \mathcal N( \bm x; \bm\mu_m, \Sigma_m) \\
+                        \gamma_{\bm x,m} &= \frac{\bar \gamma_{\bm x, m}}{ \sum_{m \in M} \bar \gamma_{\bm x, m} }\\
+                        \mathcal N( \bm x; \bm\mu_m, \Sigma_m) &:= \pi_m \cdot \frac{1}{ \sqrt{(2\pi)^d
+                        \det({\Sigma_m})} }
+                        \exp \left(-\frac{1}{2}({\mathbf x}-{\bm\mu_m})^{\top}{{\Sigma_m}}^{-1}({\bm x}-{\bm\mu_m})
+                        \right)\\
                         \end{aligned}
                         $$
                     </div>
+                    <div>
 
-                    <ul>
-                        <li> We will focus on the M-Step </li>
-                        <li> Loops in python are slow. How can we avoid as many loops as possible </li>
-                        <li> First naïve implementation (only one loop) </li>
-                    </ul>
+                        Intimidating, but …
+                    </div>
+                    <div>
+
+                        <ul>
+                            <li>Only $n\times k$ Gaussians </li>
+                            <li>And normalization (Bayes theorem) </li>
+                            <li> How hard can it be …? (live)</li>
+                            <li> We will focus on the M-Step </li>
+                            <li> Loops in python are slow. How can we avoid as many loops as possible </li>
+                        </ul>
+
+                    </div>
+                    </p>
+
                 </section>
+
                 <section>
                     <h2> Look mom, no loops </h2>
                     <div class="r-stack">
@@ -574,11 +565,40 @@
                         <li class="fragment fade-in" data-fragment-index="2"> This is called <a
                                 href="https://en.wikipedia.org/wiki/Einstein_notation"> Einstein notation </a> </li>
                         <li class="fragment fade-in" data-fragment-index="6"> Included in Numpy! </li>
-                        <li class="fragment fade-in" data-fragment-index="7"> Must be faster, right? Let's find out!
-                        </li>
+
                     </ul>
                 </section>
+
                 <section>
+                    <h2>Putting it together </h2>
+                    <pre style="height: 120%; width: 80%;">
+                        <code data-trim data-line-numbers>
+                            def maximize_(gmm: GaussianMixtureModel, responsibilities: Likelihood, data: NDArray[np.float64]) -> None:
+                            """Maximization step"""
+
+                                assert responsibilities.shape[0] == data.shape[0]
+
+                                sum_responsibilities = responsibilities.sum(axis=0)
+
+                                gmm.means = (
+                                    np.sum(data[:, np.newaxis, :] * responsibilities[:, :, np.newaxis], axis=0)
+                                    / sum_responsibilities[:, np.newaxis]
+                                )
+
+                                data = data[:, np.newaxis, :] - gmm.means[np.newaxis, :, :]  # n x k x d
+
+                                gmm.covs = (
+                                    np.einsum("nkd, nk,  nke -> kde", data, responsibilities, data)
+                                    / sum_responsibilities[:, np.newaxis, np.newaxis]
+                                )
+
+
+                                gmm.weights = sum_responsibilities / sum_responsibilities.sum()
+                        </code>
+                    </pre>
+                </section>
+
+                <!-- <section>
                     <h2>
                         Benchmark
                     </h2>
@@ -607,7 +627,7 @@
                         <li> Python loops perform better! </li>
                         <li> Surprisingly, the loop version is faster </li>
                     </ul>
-                </section>
+                </section> -->
 
             </section>
 
