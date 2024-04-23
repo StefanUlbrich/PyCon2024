@@ -40,7 +40,7 @@ def expect(gmm: GaussianMixtureModel, data: NDArray[np.float64]) -> Likelihood:
     # return Likelihood(res)
 
 
-def maximize_(gmm: GaussianMixtureModel, responsibilities: Likelihood, data: NDArray[np.float64]) -> None:
+def maximize(gmm: GaussianMixtureModel, responsibilities: Likelihood, data: NDArray[np.float64]) -> None:
     """Maximization step"""
 
     assert responsibilities.shape[0] == data.shape[0]
@@ -62,10 +62,10 @@ def maximize_(gmm: GaussianMixtureModel, responsibilities: Likelihood, data: NDA
     gmm.weights = sum_responsibilities / sum_responsibilities.sum()
 
 
-def maximize(gmm: GaussianMixtureModel, responsibilities: Likelihood, data: NDArray[np.float64]) -> None:
+def maximize_native(gmm: GaussianMixtureModel, responsibilities: Likelihood, data: NDArray[np.float64]) -> None:
     """Native implementation of the maximization step"""
 
-    (means, covs, weights) = bindings.maximize(responsibilities, data)
+    (means, covs, weights) = bindings.maximize(data, responsibilities)
 
     gmm.weights = weights
     gmm.covs = covs
